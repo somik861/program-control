@@ -21,7 +21,7 @@ STANDARD_ERROR_TRIGGERS: Triggers = {}
 
 
 def load_config(path: Path) -> None:
-    cfg = yaml.load(open(path, 'r', encoding='utf-8'))
+    cfg = yaml.load(open(path, 'r', encoding='utf-8'), yaml.Loader)
 
     def create_trigger(patern: re.Pattern) -> Trigger:
         def trigger(string: str):
@@ -30,7 +30,7 @@ def load_config(path: Path) -> None:
 
     def load_actions(triggers: Triggers, cfg: dict[str, str]) -> None:
         for trigger_pattern, actions in cfg.items():
-            trigger = create_trigger(trigger_pattern)
+            trigger = create_trigger(re.compile(trigger_pattern))
             triggers[trigger] = []
             for action in actions:
                 if action not in KNOWN_ACTIONS:
@@ -48,7 +48,8 @@ def load_config(path: Path) -> None:
 async def control_output(reader: asyncio.StreamReader, triggers: Triggers, action_args: ActionArgs) -> None:
     while not reader.at_eof():
         line = (await reader.readline()).decode()
-        for trigger, actions in triggers:
+        print(line, flush=True, end='')
+        for trigger, actions in triggers.items():
             if trigger(line):
                 for action in actions:
                     action(action_args)
@@ -74,14 +75,15 @@ def execute(path: Path, *args: str) -> None:
 
 
 def main() -> None:
-    parser = ArgumentParser()
+    # Lets hope no argument of program will start with newline :D
+    parser = ArgumentParser(prefix_chars='\n')
     parser.add_argument('config', type=Path, help='Path to config (yaml)')
     parser.add_argument('exec', type=Path, help='Executable path')
     parser.add_argument('args', type=str, nargs='*', help='Executable arguments')
     args = parser.parse_args()
 
     load_config(args.config)
-    execute(args.exec, *parser.args)
+    execute(args.exec, *args.args)
 
 
 if __name__ == '__main__':
