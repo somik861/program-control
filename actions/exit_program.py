@@ -10,7 +10,3 @@ class Run(IAction):
         sleep(5)
         if process.returncode is None:
             process.kill()
-        
-
-
-       

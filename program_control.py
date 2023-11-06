@@ -5,16 +5,13 @@ import yaml
 from typing import Callable, Any
 import re
 from actions import exit_program
-
-# Action takes program state and does something
-ActionArgs = asyncio.subprocess.Process
-Action = Callable[[asyncio.subprocess.Process], None]
+from common import Action, ActionArgs
 
 # Takes one line of output and returns True if actions should be triggered
 Trigger = Callable[[str], bool]
 Triggers = dict[Trigger, list[Action]]
 
-KNOWN_ACTIONS: [str, Action] = {'exit_program': exit_program.Run}
+KNOWN_ACTIONS: dict[str, Action] = {'exit_program': exit_program.Run} # type: ignore
 
 STANDARD_OUT_TRIGGERS: Triggers = {}
 STANDARD_ERROR_TRIGGERS: Triggers = {}
@@ -65,8 +62,8 @@ async def execute_program(path: Path, *args: str) -> None:
     )
 
     await asyncio.gather(
-        control_output(proc.stdout, STANDARD_OUT_TRIGGERS, proc),
-        control_output(proc.stderr, STANDARD_ERROR_TRIGGERS, proc)
+        control_output(proc.stdout, STANDARD_OUT_TRIGGERS, proc), # type: ignore
+        control_output(proc.stderr, STANDARD_ERROR_TRIGGERS, proc), # type: ignore
     )
 
 
