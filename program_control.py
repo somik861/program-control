@@ -11,7 +11,7 @@ from common import Action, ActionArgs
 Trigger = Callable[[str], bool]
 Triggers = dict[Trigger, list[Action]]
 
-KNOWN_ACTIONS: dict[str, Action] = {'exit_program': exit_program.Run} # type: ignore
+KNOWN_ACTIONS: dict[str, Action] = {'exit_program': exit_program.Run()}
 
 STANDARD_OUT_TRIGGERS: Triggers = {}
 STANDARD_ERROR_TRIGGERS: Triggers = {}
