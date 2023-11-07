@@ -1,6 +1,13 @@
 stdout:
   # if 'Exception' appears in in standard output, call exit_program action (exits program)
-  'Exception': ['exit_program']
+  "Exception":
+    - action: "exit_program"
+      args: 
+        kind_kill_timeout: 5
+
 stderr:
   # if 'Exception' appears in in standard error, call exit_program action (exits program)
-  'Exception': ['exit_program']
+  "Exception":
+    - action: "exit_program"
+      args:
+        kind_kill_timeout: 3
