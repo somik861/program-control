@@ -78,9 +78,9 @@ async def execute_program(path: Path, *args: str) -> None:
 
     await asyncio.gather(
         control_output(proc.stdout, STANDARD_OUT_TRIGGERS, # type: ignore
-                       proc),  
+                       (proc,)),  
         control_output(proc.stderr, STANDARD_ERROR_TRIGGERS, # type: ignore
-                       proc),  
+                       (proc,)),  
     )
 
 

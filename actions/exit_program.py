@@ -11,7 +11,7 @@ class Run(IAction):
     def __call__(self, args: ActionArgs) -> None:
         super().__call__(args)
 
-        process = args
+        process = args[0]
         if self.kind_kill_timeout > 0:
             process.terminate()
             sleep(self.kind_kill_timeout)
