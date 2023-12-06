@@ -11,5 +11,6 @@ class Run(IAction):
         for timer in timers:
             if timer.name == self.name:
                 timer.start = None
+                break
         else:
             raise RuntimeError(f'timer "{self.name}" does not exist')
