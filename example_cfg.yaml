@@ -11,3 +11,14 @@ stderr:
     - action: "exit_program"
       args:
         kind_kill_timeout: 3
+
+timers:
+  # call exit_program action if program runs more than 60 seconds
+  "timer_name":
+    autostart: true
+    duration:
+        seconds: 60
+    actions:
+      - action: "exit_program"
+        args:
+          kind_kill_timeout: 3
